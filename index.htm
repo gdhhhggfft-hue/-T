@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4T | Server Rules & Info</title>
+<style>
+  :root{
+    --gold: #d4a72c;
+    --gold-bright: #ffd76a;
+    --bg: #05060a;
+    --panel: #0d0f17;
+    --panel-border: rgba(212,167,44,0.25);
+    --text: #f4f4f8;
+    --muted: #9a9aab;
+    --danger: #ff5f5f;
+    --danger-bg: rgba(255,95,95,0.08);
+    --danger-border: rgba(255,95,95,0.35);
+    --discord: #5865F2;
+  }
+
+  * { box-sizing: border-box; margin:0; padding:0; }
+
+  html{ scroll-behavior: smooth; }
+
+  body{
+    background: radial-gradient(circle at 50% -10%, #1a1404 0%, #05060a 45%, #000 100%);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    padding: 40px 20px 80px;
+    line-height: 1.6;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Ambient floating particles */
+  .particle{
+    position: fixed;
+    border-radius: 50%;
+    background: var(--gold);
+    opacity: 0.15;
+    filter: blur(2px);
+    pointer-events: none;
+    animation: drift 18s linear infinite;
+    z-index: 0;
+  }
+  .particle:nth-child(1){ width: 6px; height: 6px; left: 10%; top: 100%; animation-delay: 0s; }
+  .particle:nth-child(2){ width: 4px; height: 4px; left: 30%; top: 100%; animation-delay: 4s; }
+  .particle:nth-child(3){ width: 8px; height: 8px; left: 55%; top: 100%; animation-delay: 8s; }
+  .particle:nth-child(4){ width: 5px; height: 5px; left: 75%; top: 100%; animation-delay: 12s; }
+  .particle:nth-child(5){ width: 3px; height: 3px; left: 90%; top: 100%; animation-delay: 2s; }
+  .particle:nth-child(6){ width: 7px; height: 7px; left: 20%; top: 100%; animation-delay: 16s; }
+
+  @keyframes drift{
+    0%{ transform: translateY(0) translateX(0); opacity: 0; }
+    10%{ opacity: 0.2; }
+    90%{ opacity: 0.15; }
+    100%{ transform: translateY(-110vh) translateX(40px); opacity: 0; }
+  }
+
+  .wrap{
+    max-width: 760px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* HERO */
+  .hero{
+    text-align:center;
+    padding-bottom: 36px;
+    border-bottom: 1px solid var(--panel-border);
+    margin-bottom: 40px;
+    position: relative;
+  }
+
+  .logo-ring{
+    width: 140px;
+    height: 140px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    position: relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .logo-ring::before{
+    content:"";
+    position:absolute;
+    inset: -10px;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, var(--gold), transparent 30%, var(--gold), transparent 70%, var(--gold));
+    filter: blur(14px);
+    opacity: 0.55;
+    animation: spin 12s linear infinite;
+  }
+
+  .logo-ring img{
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 0 0 2px rgba(212,167,44,0.5), 0 0 50px rgba(212,167,44,0.4);
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+
+  .hero h1{
+    font-size: 44px;
+    font-weight: 800;
+    letter-spacing: 6px;
+    background: linear-gradient(135deg, #fff7e0, var(--gold-bright), var(--gold));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 30px rgba(212,167,44,0.3);
+  }
+
+  .hero p.tag{
+    margin-top: 10px;
+    color: var(--gold-bright);
+    font-size: 14px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    opacity: 0.85;
+  }
+
+  .hero p.sub{
+    margin-top: 16px;
+    color: var(--muted);
+    font-size: 15px;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* CTA BUTTONS */
+  .cta-row{
+    display:flex;
+    gap: 14px;
+    justify-content:center;
+    margin-top: 28px;
+    flex-wrap: wrap;
+  }
+
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    gap: 10px;
+    padding: 13px 26px;
+    border-radius: 999px;
+    text-decoration:none;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: all .25s ease;
+    border: 1px solid transparent;
+  }
+
+  .btn-primary{
+    background: linear-gradient(135deg, var(--discord), #4752C4);
+    color: #fff;
+    box-shadow: 0 6px 24px rgba(88,101,242,0.35);
+  }
+  .btn-primary:hover{
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(88,101,242,0.5);
+  }
+
+  .btn-secondary{
+    background: var(--panel);
+    color: var(--gold-bright);
+    border-color: var(--panel-border);
+  }
+  .btn-secondary:hover{
+    border-color: var(--gold);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(212,167,44,0.2);
+  }
+
+  .btn svg{ width: 18px; height: 18px; flex-shrink:0; }
+
+  /* QUICK NAV */
+  .nav{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 48px;
+  }
+
+  .nav a{
+    text-decoration: none;
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 14px;
+    padding: 18px 12px;
+    text-align: center;
+    color: var(--text);
+    transition: all .25s ease;
+    position: relative;
+    overflow:hidden;
+  }
+
+  .nav a::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background: linear-gradient(135deg, rgba(212,167,44,0.12), transparent);
+    opacity:0;
+    transition: opacity .25s ease;
+  }
+
+  .nav a:hover{
+    border-color: var(--gold);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(212,167,44,0.15);
+  }
+
+  .nav a:hover::after{ opacity:1; }
+
+  .nav .icon{
+    font-size: 26px;
+    margin-bottom: 8px;
+    display:block;
+  }
+
+  .nav .label{
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: var(--gold-bright);
+    text-transform: uppercase;
+  }
+
+  /* SECTION HEADER */
+  .section-title{
+    display:flex;
+    align-items:center;
+    gap: 12px;
+    margin-bottom: 22px;
+  }
+
+  .section-title .bolt{
+    font-size: 22px;
+    color: var(--gold);
+    filter: drop-shadow(0 0 8px rgba(212,167,44,0.6));
+  }
+
+  .section-title h2{
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+
+  /* RULES */
+  .rules{
+    display: grid;
+    gap: 14px;
+  }
+
+  .rule{
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 14px;
+    padding: 18px 20px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    transition: border-color .25s ease, transform .2s ease;
+    opacity: 0;
+    transform: translateY(16px);
+    animation: rise .6s ease forwards;
+  }
+
+  .rule:nth-child(1){ animation-delay: .05s; }
+  .rule:nth-child(2){ animation-delay: .1s; }
+  .rule:nth-child(3){ animation-delay: .15s; }
+  .rule:nth-child(4){ animation-delay: .2s; }
+  .rule:nth-child(5){ animation-delay: .25s; }
+  .rule:nth-child(6){ animation-delay: .3s; }
+  .rule:nth-child(7){ animation-delay: .35s; }
+  .rule:nth-child(8){ animation-delay: .4s; }
+  .rule:nth-child(9){ animation-delay: .45s; }
+
+  @keyframes rise{
+    to{ opacity: 1; transform: translateY(0); }
+  }
+
+  .rule:hover{
+    border-color: var(--gold);
+    transform: translateX(4px);
+  }
+
+  .rule.danger{
+    background: var(--danger-bg);
+    border-color: var(--danger-border);
+  }
+
+  .rule.danger:hover{
+    border-color: var(--danger);
+  }
+
+  .num{
+    flex-shrink:0;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, rgba(212,167,44,0.18), rgba(212,167,44,0.05));
+    border: 1px solid var(--panel-border);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight: 800;
+    color: var(--gold-bright);
+    font-size: 15px;
+  }
+
+  .rule.danger .num{
+    background: linear-gradient(135deg, rgba(255,95,95,0.2), rgba(255,95,95,0.05));
+    border-color: var(--danger-border);
+    color: var(--danger);
+  }
+
+  .rule .content h3{
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: var(--text);
+    letter-spacing: 0.5px;
+  }
+
+  .rule.danger .content h3{
+    color: #ffb3b3;
+  }
+
+  .rule .content p{
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  .rule.danger .content p{
+    color: #d9b6b6;
+  }
+
+  /* JOIN CARD */
+  .join-card{
+    margin-top: 56px;
+    background: linear-gradient(145deg, rgba(212,167,44,0.1), var(--panel));
+    border: 1px solid var(--panel-border);
+    border-radius: 18px;
+    padding: 36px 28px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .join-card::before{
+    content:"";
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(212,167,44,0.25), transparent 70%);
+    top: -60px;
+    right: -60px;
+    border-radius: 50%;
+  }
+
+  .join-card h2{
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    background: linear-gradient(135deg, #fff7e0, var(--gold-bright));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .join-card p{
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 24px;
+    max-width: 420px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* FOOTER */
+  .footer{
+    margin-top: 56px;
+    text-align: center;
+    padding-top: 28px;
+    border-top: 1px solid var(--panel-border);
+  }
+
+  .footer p{
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+
+  .footer .brand{
+    color: var(--gold-bright);
+    font-weight: 800;
+    letter-spacing: 3px;
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+
+  @media (max-width: 600px){
+    .nav{ grid-template-columns: repeat(1, 1fr); }
+    .hero h1{ font-size: 32px; letter-spacing: 3px; }
+    .logo-ring, .logo-ring img{ width: 110px; height: 110px; }
+    .cta-row{ flex-direction: column; align-items: center; }
+    .btn{ width: 100%; max-width: 280px; justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+  <span class="particle"></span>
+  <span class="particle"></span>
+  <span class="particle"></span>
+  <span class="particle"></span>
+  <span class="particle"></span>
+  <span class="particle"></span>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="logo-ring">
+      <img src="logo.png" alt="4T logo">
+    </div>
+    <h1>4T</h1>
+    <p class="tag">Server Rules &amp; Info Hub</p>
+    <p class="sub">Welcome to the 4T community. Please read through the rules below before participating — they keep this server fun, fair, and safe for everyone.</p>
+
+    <div class="cta-row">
+      <a class="btn btn-primary" href="https://discord.gg/FckAAMTw4P" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.076.076 0 0 0-.04.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+        Join Server
+      </a>
+      <a class="btn btn-secondary" href="#rules">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        View Rules
+      </a>
+    </div>
+  </div>
+
+  <!-- QUICK NAV -->
+  <div class="nav">
+    <a href="#welcome">
+      <span class="icon">🏠</span>
+      <span class="label">Welcome</span>
+    </a>
+    <a href="#rules">
+      <span class="icon">🛡️</span>
+      <span class="label">Rules</span>
+    </a>
+    <a href="https://discord.gg/FckAAMTw4P" target="_blank" rel="noopener">
+      <span class="icon">⚡</span>
+      <span class="label">Join Us</span>
+    </a>
+  </div>
+
+  <!-- WELCOME -->
+  <div id="welcome" class="section-title">
+    <span class="bolt">⚡</span>
+    <h2>Welcome to 4T</h2>
+  </div>
+  <p style="color: var(--muted); margin-bottom: 40px; font-size: 14px;">
+    Thanks for joining our community. This page covers everything you need to know to get started — most importantly, the rules everyone is expected to follow. Breaking these rules can result in warnings, mutes, or bans depending on severity.
+  </p>
+
+  <!-- RULES -->
+  <div id="rules" class="section-title">
+    <span class="bolt">⚡</span>
+    <h2>Server Rules</h2>
+  </div>
+
+  <div class="rules">
+
+    <div class="rule">
+      <div class="num">1</div>
+      <div class="content">
+        <h3>No Inappropriate Language</h3>
+        <p>Keep profanity to a minimum. Derogatory language toward any user is prohibited — this includes flirting or matchmaking. This server isn't a dating app.</p>
+      </div>
+    </div>
+
+    <div class="rule">
+      <div class="num">2</div>
+      <div class="content">
+        <h3>No Spamming</h3>
+        <p>Don't send a lot of small messages right after each other. Do not disrupt chat by spamming.</p>
+      </div>
+    </div>
+
+    <div class="rule">
+      <div class="num">3</div>
+      <div class="content">
+        <h3>No Pornographic / Adult / Other NSFW Material</h3>
+        <p>This is a community server and not meant to share this kind of material.</p>
+      </div>
+    </div>
+
+    <div class="rule">
+      <div class="num">4</div>
+      <div class="content">
+        <h3>No Advertisements</h3>
+        <p>We do not tolerate any kind of advertisements, whether it be for other communities or streams.</p>
+      </div>
+    </div>
+
+    <div class="rule">
+      <div class="num">5</div>
+      <div class="content">
+        <h3>No Server Raiding</h3>
+        <p>Raiding or mentions of raiding are not allowed.</p>
+      </div>
+    </div>
+
+    <div class="rule danger">
+      <div class="num">6</div>
+      <div class="content">
+        <h3>⚠ Direct and Indirect Threats</h3>
+        <p>Threats are STRICTLY prohibited. This also includes suicidal threats towards yourself and others. No threats will be tolerated and it will be an immediate ban.</p>
+      </div>
+    </div>
+
+    <div class="rule">
+      <div class="num">7</div>
+      <div class="content">
+        <h3>Don't Share Personal Information</h3>
+        <p>Do not share your personal information or the personal information of other users without their consent. This includes phone numbers, addresses, and any other sensitive information.</p>
+      </div>
+    </div>
+
+    <div class="rule">
+      <div class="num">8</div>
+      <div class="content">
+        <h3>Proper Use of Voice and Text Channels</h3>
+        <p>Use channels for their intended purpose only. For example, sending photos in the media and screenshots channel. Avoid disrupting voice chats and be mindful of others when speaking or sharing content.</p>
+      </div>
+    </div>
+
+    <div class="rule">
+      <div class="num">9</div>
+      <div class="content">
+        <h3>Be Respectful</h3>
+        <p>You must respect all users, regardless of your liking towards them. Treat others the way you want to be treated.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- JOIN CARD -->
+  <div class="join-card" id="join">
+    <h2>Ready to join the community?</h2>
+    <p>Hop into 4T's Discord server to chat, hang out, and stay up to date. Make sure to check the rules channel once you're in.</p>
+    <div class="cta-row" style="margin-top:0;">
+      <a class="btn btn-primary" href="https://discord.gg/FckAAMTw4P" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.076.076 0 0 0-.04.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+        Join 4T on Discord
+      </a>
+      <a class="btn btn-secondary" href="https://discord.com/channels/1487800874536276171/1489929277762965504" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Open Rules Channel
+      </a>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <p class="brand">4T</p>
+    <p>By participating in this server, you agree to follow these rules.</p>
+    <p>Violations may result in warnings, mutes, kicks, or bans at staff discretion.</p>
+  </div>
+
+</div>
+</body>
+</html>
